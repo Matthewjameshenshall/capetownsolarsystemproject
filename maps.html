@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+
+var scale = 42520000
+var myCenter=new google.maps.LatLng(-33.9458133,18.3779857);
+var sighil=new google.maps.LatLng(-33.916878, 18.403789);
+var sun = sighil;
+
+
+var planets = {
+	sun: {diameter_km: 139200 ,radius_from_sun_km:0 ,distance_from_earth_km: 0 ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0 , colour: "green"  },
+	mercury: {diameter_km: 4879,radius_from_sun_km:57900000 ,distance_from_earth_km:0 ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "green"   },
+	venus: {diameter_km: 12104,radius_from_sun_km:108200000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "pink"  },
+	earth: {diameter_km: 12756,radius_from_sun_km:149600000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	moon: {diameter_km: 3476,radius_from_sun_km:0 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	mars: {diameter_km: 6794,radius_from_sun_km:227900000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	jupiter: {diameter_km: 142984,radius_from_sun_km:778400000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	saturn: {diameter_km: 120536,radius_from_sun_km:1426700000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	uranus: {diameter_km: 51118,radius_from_sun_km:2871000000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },
+	neptune: {diameter_km: 49528,radius_from_sun_km:4498300000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0  },	
+}
+
+
+for (var key in planets) {
+   if (planets.hasOwnProperty(key)) {
+       var obj = planets[key];
+        for (var prop in obj) {
+          // important check that this is objects own property 
+          // not from prototype prop inherited
+          if(obj.hasOwnProperty(prop)){
+			obj["S_diameter_km"] = obj["diameter_km"]/scale
+			obj["S_radius_from_sun_km"] = obj["radius_from_sun_km"]/scale
+          //  console.log(key + " " + prop + " = " + obj[prop]);
+			
+          }
+		  
+       }
+    }
+	
+	//console.log(planets);
+}
+
+// INITIALIZE FUNCTION
+function initialize() {
+
+//Map
+  var mapProp = {
+    center: myCenter,
+    zoom:13,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  
+  var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  
+  
+  var marker=new google.maps.Marker({
+  position:sun
+  //icon:'pinkball.png'
+  });
+ 
+
+marker.setMap(map);
+
+// Radius 
+
+
+for (var key in planets) {
+   if (planets.hasOwnProperty(key)) {
+       var obj = planets[key];
+        for (var prop in obj) {
+          // important check that this is objects own property 
+          // not from prototype prop inherited
+          if(obj.hasOwnProperty(prop)){
+		  
+		  if(prop == "S_radius_from_sun_km") {			
+		  console.log(prop)
+		  console.log(obj[prop])
+			var R_all = new google.maps.Circle({
+			  center:sun,
+			  radius:obj[prop]*1000,
+			  strokeColor:"#0000FF",
+			  //strokeColor:obj["colour"],
+			  strokeOpacity:0.8,
+			  strokeWeight:2,
+			  //fillColor:"#0000FF",
+			 fillOpacity:0.0
+			});
+			
+			R_all.setMap(map);
+		  
+			}	
+          }
+		  
+       }
+    }
+	
+	
+}
+
+
+
+  
+  //infomarker
+  
+  var infowindow = new google.maps.InfoWindow({
+  content:"Hello World!"
+  });
+
+google.maps.event.addListener(marker, 'click', function() {
+  infowindow.open(map,marker);
+  });
+
+
+
+
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+</head>
+
+<body>
+<div class="container">
+<div class="row">
+	<div class="col-lg-8">
+		<div id="googleMap" style="height:550px;"></div>
+	</div>
+
+	<div class="col-lg-4">
+	test
+
+	<form>
+		
+
+	</form>
+	</div>
+
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+<div class="container">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+    <style>
+.navbar-center{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+  height:100%;
+}
+
+#centerHead {
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+  height:100%;
+  height: 50px;
+  padding-top: 20px;
+  float: none;
+}
+    </style>
+<script>
+
+
+var scale = 42520000;
+var myCenter=new google.maps.LatLng(-33.9458133,18.3779857);
+var sighil=new google.maps.LatLng(-33.916878, 18.403789);
+var sun = sighil;
+
+var planets = {
+	sun: {name: "Sun", diameter_km: 139200 ,radius_from_sun_km:0 ,distance_from_earth_km: 0 ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0 , colour: ""  },
+	mercury: {name: "Mercury", diameter_km: 4879,radius_from_sun_km:57900000 ,distance_from_earth_km:0 ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "green"   },
+	venus: {name: "Venus",diameter_km: 12104,radius_from_sun_km:108200000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "pink"  },
+	earth: {name: "Earth",diameter_km: 12756,radius_from_sun_km:149600000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0 ,colour: "blue"  },
+	moon: {name: "Moon",diameter_km: 3476,radius_from_sun_km:0 ,distance_from_earth_km:384400 ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0 ,colour: ""  },
+	mars: {name: "Mars",diameter_km: 6794,radius_from_sun_km:227900000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "red"   },
+	jupiter: {name: "Jupiter",diameter_km: 142984,radius_from_sun_km:778400000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "yellow"   },
+	saturn: {name: "Saturn",diameter_km: 120536,radius_from_sun_km:1426700000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "orange"   },
+	uranus: {name: "Uranus",diameter_km: 51118,radius_from_sun_km:2871000000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "black"   },
+	neptune: {name: "Neptune",diameter_km: 49528,radius_from_sun_km:4498300000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "aqua"   },	
+	pluto: {name: "Pluto",diameter_km: 2374,radius_from_sun_km:7500000000 ,distance_from_earth_km:0  ,S_diameter_km: 0,S_radius_from_sun_km:0 ,S_distance_from_earth_km: 0,colour: "violet"   },	
+}
+
+
+
+
+for (var key in planets) {
+   if (planets.hasOwnProperty(key)) {
+       var obj = planets[key];
+        for (var prop in obj) {
+          // important check that this is objects own property 
+          // not from prototype prop inherited
+          if(obj.hasOwnProperty(prop)){
+			obj["S_diameter_km"] = obj["diameter_km"]/scale
+			obj["S_radius_from_sun_km"] = obj["radius_from_sun_km"]/scale
+			obj["S_distance_from_earth_km"] = obj["distance_from_earth_km"]/scale
+          //  console.log(key + " " + prop + " = " + obj[prop]);
+			
+          }
+		  
+       }
+    }
+	
+	//console.log(planets);
+}
+
+// INITIALIZE FUNCTION
+function initialize() {
+
+
+
+
+//Map
+  var mapProp = {
+    center: myCenter,
+    zoom:9,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  
+  var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  
+  
+  var marker=new google.maps.Marker({
+  position:sun,
+  //icon:'/sun.png'
+  });
+ 
+
+marker.setMap(map);
+
+// Radius 
+
+
+for (var key in planets) {
+   if (planets.hasOwnProperty(key)) {
+       var obj = planets[key];
+        for (var prop in obj) {
+          // important check that this is objects own property 
+          // not from prototype prop inherited
+          if(obj.hasOwnProperty(prop)){
+		  
+		  if(prop == "S_radius_from_sun_km") {			
+		 //console.log (prop)
+		 // console.log(obj[prop])
+			var R_all = new google.maps.Circle({
+			  center:sun,
+			  radius:obj[prop]*1000,
+			  //strokeColor:"#0000FF",
+			 strokeColor:obj["colour"],
+			  strokeOpacity:0.8,
+			  strokeWeight:2,
+			  //fillColor:"#0000FF",
+			 fillOpacity:0.0
+			});
+			
+			R_all.setMap(map);
+		  
+			}	
+          }
+		  
+       }
+    }
+	
+	
+}
+
+
+
+  
+  //infomarker
+  
+  var infowindow = new google.maps.InfoWindow({
+  content:"The Sun"
+  });
+
+google.maps.event.addListener(marker, 'click', function() {
+  infowindow.open(map,marker);
+  });
+
+
+
+}
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+//display
+
+
+
+</script>
+
+
+<div class="container" ng-app="myApp" ng-controller="myCtrl">
+<h1 id="centerHead"> The Cape Town Solar System Project </h1>
+<hr>
+<div style="text-align:center;">
+
+<iframe width="621" height="378" src="https://www.youtube.com/embed/8t7Yvri9ZM4?rel=0" frameborder="0" allowfullscreen></iframe>
+
+</div>
+<hr>
+
+<div class="row">
+	<div class="col-lg-6">
+		<div id="googleMap" style="height:580px;"></div>
+	</div>
+
+	<div class="col-lg-6" id="display">
+<h3> The Solar System at a scale of 1 : {{scale}} <br> </h3>
+
+<br>
+<table class="table table-striped">
+  <tr>
+    <th>Planet</th>
+    <th>Planet Diameter (km) </th>
+    <th>Distance from sun (km) </th>
+    <th>Distance from earth (km)</th>
+    <th>Scale - Size (m)</th>
+    <th>Scale - Distance from sun (km)</th>
+    <th>Scale - Distance from earth (m)</th>
+  </tr>
+
+  <tr data-ng-repeat="x in planets">
+ 	<td style="background-color:{{x.colour}}">{{x.name}}</td>
+    <td> {{ x.diameter_km }}</td>
+    <td> {{ x.radius_from_sun_km }}</td>
+    <td> {{ x.distance_from_earth_km }}</td>
+    <td style="background-color:lavender"> {{ x.S_diameter_km*1000 | number:2 }}</td>
+    <td style="background-color:lavender"> {{ x.S_radius_from_sun_km | number:0 }}</td>
+	<td> {{ x.S_distance_from_earth_km*1000 | number:2}}</td>
+  </tr>
+
+
+</table>
+	
+	</div>
+
+	
+ 
+</div>
+
+
+</div>
+</div>
+
+
+</div>
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+   $scope.planets = planets;
+    $scope.scale=scale;
+});
+</script>

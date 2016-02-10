@@ -1,0 +1,28 @@
+<div class='container'>
+	<div class="col-md-2">
+
+	</div>
+	<div class="col-md-10">
+	<h1><%= user.name %> </h1>	
+	  <div class="jumbotron">
+	  Welcome to SkillUp tutoring <% user.name %>, we are here to give you some wonderful resources and connect you with a tutor & mentor to guide you trough your year. First tell us a bit more about yourself to get started. We will give you a call. 
+
+	  <form action="/user/update/<%= user.id %>" method="POST" class="form-inline">
+		School:	<input value="<%= user.name %>" name="name" type="text" class="form-control"/><br>
+		Grade: <input value="<%= user.title %>" name="title" type="text" class="form-control"/><br>
+		Parent/Guardian Name:<input value="<%= user.email %>" name="email" type="text" class="form-control"/><br>
+		Parent/Guardian Phone no:<input value="<%= user.email %>" name="email" type="text" class="form-control"/><br>
+		Area: <input value="<%= user.email %>" name="email" type="text" class="form-control"/><br>
+		What subject do you want help with? <input value="<%= user.email %>" name="email" type="text" class="form-control"/><br>
+		<input type="submit" value="Proceed" class="btn btn-lg btn-primary btn-block"/><br>
+		<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+	</form>
+
+	  </div>
+	
+	
+	<a class="btn btn-medium btn-primary" href="/user/edit/<%= user.id %>">Edit</a>
+
+	<hr>
+	</div>
+</div>
