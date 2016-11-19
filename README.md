@@ -1,4 +1,4 @@
-# tutor
+# Cape Town Solar System Project
 
 a [Sails](http://sailsjs.org) application
 
